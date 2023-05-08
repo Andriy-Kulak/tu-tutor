@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
-import { FaMicrophone } from "react-icons/fa";
+import { FaMicrophone, FaTwitter } from "react-icons/fa";
 import Beatloader from "react-spinners/BeatLoader";
 import base64ToBlob from "@/utils/basetoblob";
 import {
@@ -14,6 +14,7 @@ import {
   VStack,
   useToast,
   useColorModeValue,
+  Link,
 } from "@chakra-ui/react";
 import { handleEnterKeyPress } from "@/utils";
 import NameInput from "@/components/NameInput";
@@ -50,7 +51,6 @@ function Home() {
   // on the first translate, we need to get the user's name
   // on subsequent translates, we can use the name from state
   const translate = async (props?: { name?: string }) => {
-    console.log(" 000 we hitting this");
     if (!text && !props?.name)
       return toast({
         title: "Enter text to translate first!",
@@ -65,10 +65,7 @@ function Home() {
 
     const message = { role: "user", content: text };
 
-    console.log("111");
-
     if (!props?.name) {
-      console.log("22222", text);
       addMessage({ role: "user", content: text });
       setText("");
     }
@@ -94,8 +91,6 @@ function Home() {
 
     const { audioDataBase64, translatedText } = await response.json();
 
-    console.log("yyyy audioDataBase64", { audioDataBase64, translatedText });
-
     addMessage({ role: "assistant", content: translatedText });
 
     const audioBlob = base64ToBlob(audioDataBase64, "audio/mpeg");
@@ -109,7 +104,7 @@ function Home() {
     try {
       setLoading(false);
     } catch (e: any) {
-      console.log("yyyy error", e.message);
+      console.log("Error:", e.message);
     }
   };
 
@@ -130,8 +125,6 @@ function Home() {
 
     if (isListening) mic.start();
     if (!isListening) mic.stop();
-
-    console.log("yyyy 0000");
 
     mic.onresult = (event: SpeechRecognitionEvent) => {
       const transcript = Array.from(event.results)
@@ -159,7 +152,6 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    console.log("are we hitting this? yyy");
     handleListen(micRef.current);
   }, [isListening]);
 
@@ -181,7 +173,17 @@ function Home() {
         <Heading as="h1" color="black">
           Your Tutor in Spanish
         </Heading>
-        <Text color="black">Start a conversation with AI tutor in Spanish</Text>
+        <Text color="black">
+          Start a conversation with AI tutor in Spanish. For more tutorials &
+          content, you can follow me on Twitter{" "}
+          <Link
+            href="https://twitter.com/emergingbits"
+            color="#1DA1F2"
+            isExternal
+          >
+            <Icon as={FaTwitter} fontSize="md" />
+          </Link>
+        </Text>
         <Text color="black" as="i">
           <b> Microphone works well in Google Chrome only (for now).</b>
         </Text>

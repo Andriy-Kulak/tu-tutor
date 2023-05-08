@@ -14,8 +14,6 @@ export default async function translate(
 ) {
   const { messages, userName } = req.body;
 
-  console.log("mesages", { messages, userName });
-
   const translatedText = await askOpenAI({ messages, userName });
 
   const TRIAL_URL = "https://api.elevenlabs.io";
@@ -61,8 +59,6 @@ async function askOpenAI({
       ...messages,
     ],
   });
-
-  console.log("Server Reponse:", JSON.stringify(response.data, null, 2));
 
   return response.data.choices[0].message?.content;
 }

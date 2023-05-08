@@ -2,6 +2,8 @@
 
 Weekend project where I learned how to use open ai chatpot, eleven labs, prompt engineering to have an ai tutor to speak with and improve my spanish! I took some inspiration & code from Aleem's [Espanol Love Repo](https://github.com/aleemrehmtulla/espanol-love) :-)
 
+For more content, you can follow me on twitter [here](https://twitter.com/emergingbits)
+
 ### Setup
 
 1. Grab an openai api key from [here](https://beta.openai.com/) and add it to your .env file
