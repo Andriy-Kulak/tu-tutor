@@ -18,6 +18,7 @@ import {
 import { handleEnterKeyPress } from "@/utils";
 import NameInput from "@/components/NameInput";
 import { Message } from "@/types";
+import useIsChrome from "@/hooks/useIsChrome";
 
 let SpeechRecognition: { new (): SpeechRecognition };
 
@@ -27,6 +28,7 @@ if (typeof window !== "undefined") {
 }
 
 function Home() {
+  const isChrome = useIsChrome();
   const micRef = useRef<SpeechRecognition>();
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -63,7 +65,10 @@ function Home() {
 
     const message = { role: "user", content: text };
 
+    console.log("111");
+
     if (!props?.name) {
+      console.log("22222", text);
       addMessage({ role: "user", content: text });
       setText("");
     }
@@ -97,11 +102,11 @@ function Home() {
     const audioURL = URL.createObjectURL(audioBlob);
 
     audioRef.current.src = audioURL;
+    await audioRef.current.play();
 
-    console.log("yyyy 2 audioRef.current", audioRef.current);
+    setText("");
 
     try {
-      audioRef.current.play();
       setLoading(false);
     } catch (e: any) {
       console.log("yyyy error", e.message);
@@ -178,12 +183,13 @@ function Home() {
         </Heading>
         <Text color="black">Start a conversation with AI tutor in Spanish</Text>
         <Text color="black" as="i">
-          Microphone works in Google Chrome only (for now).
+          <b> Microphone works in Google Chrome only (for now).</b>
         </Text>
 
         {!userName ? (
           <NameInput
             onEnter={(name) => {
+              startAudioForPermission();
               setUserName(name);
               translate({ name });
             }}
@@ -223,7 +229,6 @@ function Home() {
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={handleEnterKeyPress(() => {
-                  //  startAudioForPermission();
                   translate();
                 })}
               />
@@ -241,18 +246,20 @@ function Home() {
               >
                 Send
               </Button>
-              <Icon
-                as={FaMicrophone}
-                cursor="pointer"
-                color={isListening ? "red.500" : "gray.500"}
-                onClick={() => {
-                  setIsListening(!isListening);
-
-                  if (isListening === true) {
-                    translate();
-                  }
-                }}
-              />
+              {isChrome && (
+                <Icon
+                  as={FaMicrophone}
+                  cursor="pointer"
+                  color={isListening ? "red.500" : "gray.500"}
+                  onClick={() => {
+                    if (isListening === true) {
+                      translate();
+                    }
+                    setIsListening(!isListening);
+                    setText("");
+                  }}
+                />
+              )}
             </HStack>
           </>
         )}
