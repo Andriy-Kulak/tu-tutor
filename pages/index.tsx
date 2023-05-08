@@ -183,7 +183,7 @@ function Home() {
         </Heading>
         <Text color="black">Start a conversation with AI tutor in Spanish</Text>
         <Text color="black" as="i">
-          <b> Microphone works in Google Chrome only (for now).</b>
+          <b> Microphone works well in Google Chrome only (for now).</b>
         </Text>
 
         {!userName ? (
