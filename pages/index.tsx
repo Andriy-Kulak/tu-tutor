@@ -28,7 +28,7 @@ if (typeof window !== "undefined") {
 
 function Home() {
   const micRef = useRef<SpeechRecognition>();
-  const audioRef = useRef<HTMLAudioElement>();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -103,7 +103,7 @@ function Home() {
     try {
       audioRef.current.play();
       setLoading(false);
-    } catch (e) {
+    } catch (e: any) {
       console.log("yyyy error", e.message);
     }
   };
@@ -142,8 +142,10 @@ function Home() {
 
   useEffect(() => {
     const mic = new SpeechRecognition();
-    const audio = new Audio();
+
     micRef.current = mic;
+
+    const audio = new Audio();
     audioRef.current = audio;
 
     return () => {
